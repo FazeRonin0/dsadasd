@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale: 1.0">
+    <title>Script Hub</title>
+    <style>
+        /* General Styles */
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #2c2c2c;
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            height: 100vh;
+        }
+
+        header {
+            background-color: #1f1f1f;
+            padding: 20px 0;
+            text-align: center;
+            width: 100%;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        header h1 {
+            color: #fbc02d;
+            font-size: 36px;
+            margin: 0;
+            text-transform: uppercase;
+        }
+
+        nav {
+            display: flex;
+            justify-content: center;
+            background-color: #333;
+            width: 100%;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        nav a {
+            color: #fff;
+            padding: 15px;
+            text-decoration: none;
+            font-size: 16px;
+            text-transform: uppercase;
+            transition: background 0.3s ease;
+        }
+
+        nav a:hover, nav a.active {
+            background-color: #fbc02d;
+            color: #1f1f1f;
+        }
+
+        .search-bar {
+            width: 80%;
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .search-bar input {
+            padding: 12px;
+            font-size: 18px;
+            width: 80%;
+            border-radius: 5px;
+            border: none;
+            margin-right: 10px;
+            background-color: #333;
+            color: #fff;
+            outline: none;
+            transition: background 0.3s ease;
+        }
+
+        .search-bar input:focus {
+            background-color: #444;
+        }
+
+        .script-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+            width: 80%;
+            margin-top: 30px;
+        }
+
+        .script-card {
+            background: #333;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        .script-card:hover {
+            transform: scale(1.05);
+            background: #444;
+        }
+
+        .script-card h3 {
+            color: #fbc02d;
+            margin-bottom: 10px;
+        }
+
+        .script-card pre {
+            background: #444;
+            padding: 1rem;
+            overflow-x: auto;
+            border-radius: 5px;
+            height: 100px;
+        }
+
+        .copy-btn {
+            margin-top: 10px;
+            padding: 8px 15px;
+            font-size: 14px;
+            background-color: #fbc02d;
+            color: #1f1f1f;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .copy-btn:hover {
+            background-color: #d69b2e;
+        }
+
+        /* Custom Notification Styles */
+        .notification {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #333;
+            color: #fff;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-size: 16px;
+            display: none;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        .notification.show {
+            display: block;
+            opacity: 1;
+        }
+
+        /* Tabs Styles */
+        .tabs {
+            display: flex;
+            justify-content: center;
+            width: 100%;
+            background-color: #333;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        .tabs a {
+            color: #fff;
+            padding: 15px 20px;
+            text-decoration: none;
+            font-size: 18px;
+            text-transform: uppercase;
+            transition: background 0.3s ease;
+            border: none;
+        }
+
+        .tabs a:hover, .tabs a.active {
+            background-color: #fbc02d;
+            color: #1f1f1f;
+        }
+
+        /* Upload Form Styles */
+        .upload-form {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 30px;
+            width: 80%;
+            padding: 20px;
+            background: #333;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .upload-form input[type="file"] {
+            background-color: #444;
+            padding: 10px;
+            color: #fff;
+            border: 1px solid #666;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+
+        .upload-form input[type="submit"] {
+            background-color: #fbc02d;
+            color: #1f1f1f;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .upload-form input[type="submit"]:hover {
+            background-color: #d69b2e;
+        }
+
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Script Hub</h1>
+</header>
+
+<!-- Tabs Navigation -->
+<div class="tabs">
+    <a href="#" class="active" id="homeTab">Home</a>
+    <a href="#" id="categoriesTab">Categories</a>
+    <a href="#" id="uploadTab">Upload</a>
+    <a href="#" id="settingsTab">Settings</a>
+</div>
+
+<div class="search-bar">
+    <input type="text" id="search" placeholder="Search scripts...">
+</div>
+
+<div class="script-grid" id="homeContent">
+    <!-- Example Script Cards -->
+    <div class="script-card">
+        <h3>Hello World</h3>
+        <pre>print("Hello, World!")</pre>
+        <button class="copy-btn" onclick="copyToClipboard('print(&quot;Hello, World!&quot;)')">Copy</button>
+    </div>
+    <div class="script-card">
+        <h3>Simple Calculator</h3>
+        <pre>
+def add(a, b):
+    return a + b
+
+print(add(5, 10))
+        </pre>
+        <button class="copy-btn" onclick="copyToClipboard('def add(a, b):\n    return a + b\n\nprint(add(5, 10))')">Copy</button>
+    </div>
+    <!-- Add more script cards here -->
+</div>
+
+<!-- Upload Form -->
+<div class="upload-form" id="uploadForm">
+    <h3>Upload Your Script</h3>
+    <form id="uploadScriptForm">
+        <input type="file" name="scriptFile" accept=".txt,.py,.js,.java,.html" required>
+        <input type="submit" value="Upload Script">
+    </form>
+    <p id="fileName"></p>
+</div>
+
+<!-- Custom Notification -->
+<div id="notification" class="notification">Code copied to clipboard!</div>
+
+<script>
+    document.getElementById('search').addEventListener('input', function() {
+        const searchValue = this.value.toLowerCase();
+        const scripts = document.querySelectorAll('.script-card');
+        
+        scripts.forEach(script => {
+            const scriptTitle = script.querySelector('h3').innerText.toLowerCase();
+            if (scriptTitle.includes(searchValue)) {
+                script.style.display = 'block';
+            } else {
+                script.style.display = 'none';
+            }
+        });
+    });
+
+    function copyToClipboard(text) {
+        const tempTextArea = document.createElement('textarea');
+        tempTextArea.value = text;
+        document.body.appendChild(tempTextArea);
+        tempTextArea.select();
+        document.execCommand('copy');
+        document.body.removeChild(tempTextArea);
+
+        // Show custom notification
+        showNotification();
+    }
+
+    function showNotification() {
+        const notification = document.getElementById('notification');
+        notification.classList.add('show');
+        setTimeout(function() {
+            notification.classList.remove('show');
+        }, 3000); // Notification disappears after 3 seconds
+    }
+
+    // Tab navigation functionality
+    const tabs = document.querySelectorAll('.tabs a');
+    const homeContent = document.getElementById('homeContent');
+    const uploadForm = document.getElementById('uploadForm');
+    
+    tabs.forEach(tab => {
+        tab.addEventListener('click', (event) => {
+            // Hide all content sections
+            homeContent.style.display = 'none';
+            uploadForm.style.display = 'none';
+
+            // Remove 'active' class from all tabs
+            tabs.forEach(t => t.classList.remove('active'));
+
+            // Show content based on clicked tab
+            if (event.target.id === 'homeTab') {
+                homeContent.style.display = 'grid';  // Show Home content
+            } else if (event.target.id === 'uploadTab') {
+                uploadForm.style.display = 'flex';  // Show Upload form
+            }
+
+            // Add active class to clicked tab
+            event.target.classList.add('active');
+        });
+    });
+
+    // Handle file upload form
+    const uploadFormElement = document.getElementById('uploadScriptForm');
+    uploadFormElement.addEventListener('submit', function(event) {
+        event.preventDefault();
+        const fileInput = event.target.querySelector('input[type="file"]');
+        const fileName = fileInput.files[0]?.name || 'No file selected';
+        document.getElementById('fileName').innerText = `Uploaded file: ${fileName}`;
+        fileInput.value = ''; // Clear file input after upload
+    });
+
+</script>
+
+</body>
+</html>
